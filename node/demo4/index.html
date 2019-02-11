@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>websocket</title>
+</head>
+<body>
+    <h1>Chat Room</h1>
+    <input type="text" id="sendTxt">
+    <button id="sendBtn">send</button>
+    <script>
+        const websocket = new WebSocket("ws://localhost:3000");
+        const showMsg = (mse) => {
+            const div = document.createElement('div');
+            div.innerHTML = mse.msg;
+            switch(mse.type){
+                case 'enter':{
+                    div.style.color = 'green';
+                    break;
+                }
+                case 'left':{
+                    div.style.color = 'red';
+                    break;
+                }
+                default:{
+                    div.style.color = 'black';
+                }
+            }
+            document.body.appendChild(div);
+        }
+        // websocket 建立连接的时候
+        websocket.onopen = () => {
+            console.log('websocket open');
+            // 发送websocket数据
+            document.getElementById('sendBtn').onclick = e => {
+                const txt = document.getElementById('sendTxt').value;
+                if(txt.trim()){
+                    websocket.send(txt);
+                }
+            }
+        }
+
+        // websocket 关闭连接的时候
+        websocket.onclose = () => {
+            console.log('websocket close');
+        }
+
+        // websocket 接收到消息的时候
+        websocket.onmessage = e => {
+            console.log(e);
+            showMsg(JSON.parse(e.data));
+        }
+        
+    </script>
+</body>
+</html>

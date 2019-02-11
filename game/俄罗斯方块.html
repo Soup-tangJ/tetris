@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>火拼俄罗斯</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <style>
+        .game {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 200px;
+            height: 400px;
+            background-color: #f2faff;
+            border: 1px solid blue;
+            border-top: 0
+        }
+
+        .next {
+            width: 80px;
+            height: 80px;
+            background: #f2faff;
+            position: absolute;
+            top: 10px;
+            left: 250px;
+            border: 1px solid blue
+        }
+
+        .info {
+            position: absolute;
+            top: 100px;
+            left: 250px
+        }
+
+        .none,
+        .current,
+        .done {
+            position: absolute;
+            box-sizing: border-box;
+            width: 20px;
+            height: 20px
+        }
+
+        .none {
+            background-color: transparent
+        }
+
+        .current {
+            background-color: pink;
+            outline: 1px solid red
+        }
+
+        .done {
+            background-color: gray;
+            outline: 1px solid black
+        }
+    </style>
+</head>
+
+<body>
+    <div class="game" id="game"></div>
+    <div class="next" id="next"></div>
+    <script>
+        "use strict";
+
+        function _toConsumableArray(t) {
+            if (Array.isArray(t)) {
+                for (var e = 0, r = Array(t.length); e < t.length; e++) r[e] = t[e];
+                return r
+            }
+            return Array.from(t)
+        }
+
+        function _classCallCheck(t, e) {
+            if (!(t instanceof e)) throw new TypeError("Cannot call a class as a function")
+        }
+
+        function _possibleConstructorReturn(t, e) {
+            if (!t) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+            return !e || "object" != typeof e && "function" != typeof e ? t : e
+        }
+
+        function _inherits(t, e) {
+            if ("function" != typeof e && null !== e) throw new TypeError(
+                "Super expression must either be null or a function, not " + typeof e);
+            t.prototype = Object.create(e && e.prototype, {
+                constructor: {
+                    value: t,
+                    enumerable: !1,
+                    writable: !0,
+                    configurable: !0
+                }
+            }), e && (Object.setPrototypeOf ? Object.setPrototypeOf(t, e) : t.__proto__ = e)
+        }
+        var _createClass = function () {
+                function t(t, e) {
+                    for (var r = 0; r < e.length; r++) {
+                        var n = e[r];
+                        n.enumerable = n.enumerable || !1, n.configurable = !0, "value" in n && (n.writable = !0),
+                            Object.defineProperty(t, n.key, n)
+                    }
+                }
+                return function (e, r, n) {
+                    return r && t(e.prototype, r), n && t(e, n), e
+                }
+            }(),
+            Square = function () {
+                this.data = [
+                    [0, 0, 0, 0],
+                    [0, 0, 0, 0],
+                    [0, 0, 0, 0],
+                    [0, 0, 0, 0]
+                ], this.origin = {
+                    x: 0,
+                    y: 0
+                }, this.dir = 0, this.rotates = [
+                    [
+                        [0, 2, 0, 0],
+                        [0, 2, 0, 0],
+                        [0, 2, 0, 0],
+                        [0, 2, 0, 0]
+                    ],
+                    [
+                        [0, 0, 0, 0],
+                        [0, 0, 0, 0],
+                        [2, 2, 2, 2],
+                        [0, 0, 0, 0]
+                    ],
+                    [
+                        [0, 2, 0, 0],
+                        [0, 2, 0, 0],
+                        [0, 2, 0, 0],
+                        [0, 2, 0, 0]
+                    ],
+                    [
+                        [0, 0, 0, 0],
+                        [0, 0, 0, 0],
+                        [2, 2, 2, 2],
+                        [0, 0, 0, 0]
+                    ]
+                ]
+            };
+        Square.prototype.canRotate = function (t) {
+            var e = (this.dir + 1) % 4,
+                r = [
+                    [0, 0, 0, 0],
+                    [0, 0, 0, 0],
+                    [0, 0, 0, 0],
+                    [0, 0, 0, 0]
+                ];
+            return r = JSON.parse(JSON.stringify(this.rotates[e])), t(this.origin, r)
+        }, Square.prototype.canDown = function (t) {
+            var e = {};
+            return e.x = this.origin.x + 1, e.y = this.origin.y, t(e, this.data)
+        }, Square.prototype.canLeft = function (t) {
+            var e = {};
+            return e.x = this.origin.x, e.y = this.origin.y - 1, t(e, this.data)
+        }, Square.prototype.canRight = function (t) {
+            var e = {};
+            return e.x = this.origin.x, e.y = this.origin.y + 1, t(e, this.data)
+        }, Square.prototype.down = function () {
+            this.origin.x = this.origin.x + 1
+        }, Square.prototype.left = function () {
+            this.origin.y = this.origin.y - 1
+        }, Square.prototype.right = function () {
+            this.origin.y = this.origin.y + 1
+        }, Square.prototype.rotate = function () {
+            var t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : 0;
+            this.dir = (this.dir + 1 + t) % 4, this.data = JSON.parse(JSON.stringify(this.rotates[this.dir]))
+        };
+        var Square1 = function (t) {
+                function e() {
+                    _classCallCheck(this, e);
+                    var t = _possibleConstructorReturn(this, (e.__proto__ || Object.getPrototypeOf(e)).call(this));
+                    return t.rotates = [
+                        [
+                            [0, 2, 0, 0],
+                            [0, 2, 0, 0],
+                            [0, 2, 0, 0],
+                            [0, 2, 0, 0]
+                        ],
+                        [
+                            [0, 0, 0, 0],
+                            [2, 2, 2, 2],
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0]
+                        ],
+                        [
+                            [0, 2, 0, 0],
+                            [0, 2, 0, 0],
+                            [0, 2, 0, 0],
+                            [0, 2, 0, 0]
+                        ],
+                        [
+                            [0, 0, 0, 0],
+                            [2, 2, 2, 2],
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0]
+                        ]
+                    ], t
+                }
+                return _inherits(e, t), e
+            }(Square),
+            Square2 = function (t) {
+                function e() {
+                    _classCallCheck(this, e);
+                    var t = _possibleConstructorReturn(this, (e.__proto__ || Object.getPrototypeOf(e)).call(this));
+                    return t.rotates = [
+                        [
+                            [0, 2, 0, 0],
+                            [2, 2, 2, 0],
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0]
+                        ],
+                        [
+                            [2, 0, 0, 0],
+                            [2, 2, 0, 0],
+                            [2, 0, 0, 0],
+                            [0, 0, 0, 0]
+                        ],
+                        [
+                            [2, 2, 2, 0],
+                            [0, 2, 0, 0],
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0]
+                        ],
+                        [
+                            [0, 2, 0, 0],
+                            [2, 2, 0, 0],
+                            [0, 2, 0, 0],
+                            [0, 0, 0, 0]
+                        ]
+                    ], t
+                }
+                return _inherits(e, t), e
+            }(Square),
+            Square3 = function (t) {
+                function e() {
+                    _classCallCheck(this, e);
+                    var t = _possibleConstructorReturn(this, (e.__proto__ || Object.getPrototypeOf(e)).call(this));
+                    return t.rotates = [
+                        [
+                            [0, 2, 0, 0],
+                            [0, 2, 0, 0],
+                            [2, 2, 0, 0],
+                            [0, 0, 0, 0]
+                        ],
+                        [
+                            [2, 0, 0, 0],
+                            [2, 2, 2, 0],
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0]
+                        ],
+                        [
+                            [2, 2, 0, 0],
+                            [2, 0, 0, 0],
+                            [2, 0, 0, 0],
+                            [0, 0, 0, 0]
+                        ],
+                        [
+                            [2, 2, 2, 0],
+                            [0, 0, 2, 0],
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0]
+                        ]
+                    ], t
+                }
+                return _inherits(e, t), e
+            }(Square),
+            Square4 = function (t) {
+                function e() {
+                    _classCallCheck(this, e);
+                    var t = _possibleConstructorReturn(this, (e.__proto__ || Object.getPrototypeOf(e)).call(this));
+                    return t.rotates = [
+                        [
+                            [2, 0, 0, 0],
+                            [2, 0, 0, 0],
+                            [2, 2, 0, 0],
+                            [0, 0, 0, 0]
+                        ],
+                        [
+                            [2, 2, 2, 0],
+                            [2, 0, 0, 0],
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0]
+                        ],
+                        [
+                            [2, 2, 0, 0],
+                            [0, 2, 0, 0],
+                            [0, 2, 0, 0],
+                            [0, 0, 0, 0]
+                        ],
+                        [
+                            [0, 0, 2, 0],
+                            [2, 2, 2, 0],
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0]
+                        ]
+                    ], t
+                }
+                return _inherits(e, t), e
+            }(Square),
+            Square5 = function (t) {
+                function e() {
+                    _classCallCheck(this, e);
+                    var t = _possibleConstructorReturn(this, (e.__proto__ || Object.getPrototypeOf(e)).call(this));
+                    return t.rotates = [
+                        [
+                            [2, 2, 0, 0],
+                            [2, 2, 0, 0],
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0]
+                        ],
+                        [
+                            [2, 2, 0, 0],
+                            [2, 2, 0, 0],
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0]
+                        ],
+                        [
+                            [2, 2, 0, 0],
+                            [2, 2, 0, 0],
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0]
+                        ],
+                        [
+                            [2, 2, 0, 0],
+                            [2, 2, 0, 0],
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0]
+                        ]
+                    ], t
+                }
+                return _inherits(e, t), e
+            }(Square),
+            Square6 = function (t) {
+                function e() {
+                    _classCallCheck(this, e);
+                    var t = _possibleConstructorReturn(this, (e.__proto__ || Object.getPrototypeOf(e)).call(this));
+                    return t.rotates = [
+                        [
+                            [0, 2, 2, 0],
+                            [2, 2, 0, 0],
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0]
+                        ],
+                        [
+                            [2, 0, 0, 0],
+                            [2, 2, 0, 0],
+                            [0, 2, 0, 0],
+                            [0, 0, 0, 0]
+                        ],
+                        [
+                            [0, 2, 2, 0],
+                            [2, 2, 0, 0],
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0]
+                        ],
+                        [
+                            [2, 0, 0, 0],
+                            [2, 2, 0, 0],
+                            [0, 2, 0, 0],
+                            [0, 0, 0, 0]
+                        ]
+                    ], t
+                }
+                return _inherits(e, t), e
+            }(Square),
+            Square7 = function (t) {
+                function e() {
+                    _classCallCheck(this, e);
+                    var t = _possibleConstructorReturn(this, (e.__proto__ || Object.getPrototypeOf(e)).call(this));
+                    return t.rotates = [
+                        [
+                            [2, 2, 0, 0],
+                            [0, 2, 2, 0],
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0]
+                        ],
+                        [
+                            [0, 2, 0, 0],
+                            [2, 2, 0, 0],
+                            [2, 0, 0, 0],
+                            [0, 0, 0, 0]
+                        ],
+                        [
+                            [2, 2, 0, 0],
+                            [0, 2, 2, 0],
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0]
+                        ],
+                        [
+                            [0, 2, 0, 0],
+                            [2, 2, 0, 0],
+                            [2, 0, 0, 0],
+                            [0, 0, 0, 0]
+                        ]
+                    ], t
+                }
+                return _inherits(e, t), e
+            }(Square),
+            SquareFactory = function () {
+                function t() {
+                    _classCallCheck(this, t)
+                }
+                return _createClass(t, [{
+                    key: "make",
+                    value: function (t, e) {
+                        var r = void 0;
+                        switch (t) {
+                            case 1:
+                                r = new Square1;
+                                break;
+                            case 2:
+                                r = new Square2;
+                                break;
+                            case 3:
+                                r = new Square3;
+                                break;
+                            case 4:
+                                r = new Square4;
+                                break;
+                            case 5:
+                                r = new Square5;
+                                break;
+                            case 6:
+                                r = new Square6;
+                                break;
+                            case 7:
+                                r = new Square7
+                        }
+                        return r.origin.x = 0, r.origin.y = 4, r.rotate(e), r
+                    }
+                }]), t
+            }(),
+            makeSquare = function (t, e) {
+                var r = void 0;
+                switch (t) {
+                    case 1:
+                        r = new Square1;
+                        break;
+                    case 2:
+                        r = new Square2;
+                        break;
+                    case 3:
+                        r = new Square3;
+                        break;
+                    case 4:
+                        r = new Square4;
+                        break;
+                    case 5:
+                        r = new Square5;
+                        break;
+                    case 6:
+                        r = new Square6;
+                        break;
+                    case 7:
+                        r = new Square7
+                }
+                return r.origin.x = 0, r.origin.y = 4, r.rotate(e), r
+            },
+            Local = function () {
+                var t = void 0,
+                    e = null,
+                    r = function () {
+                        document.addEventListener("keydown", function (e) {
+                            switch (e.keyCode) {
+                                case 37:
+                                    t.left();
+                                    break;
+                                case 38:
+                                    t.rotate();
+                                    break;
+                                case 39:
+                                    t.right();
+                                    break;
+                                case 40:
+                                    t.down();
+                                    break;
+                                case 32:
+                                    t.fall();
+                                    break;
+                                default:
+                                    return !1
+                            }
+                        })
+                    },
+                    n = function () {
+                        return Math.ceil(7 * Math.random())
+                    },
+                    a = function () {
+                        return Math.ceil(4 * Math.random()) - 1
+                    },
+                    o = function () {
+                        if (!t.down()) {
+                            t.fixed(), t.checkClear();
+                            t.checkGameOver() ? i() : t.performNext(n(), a())
+                        }
+                    },
+                    i = function () {
+                        e && (clearInterval(e), e = null), alert("Game Over"), confirm("还想玩？") ? location.reload() : (
+                            alert("那好吧，88"), window.close())
+                    },
+                    s = function () {
+                        var n = {
+                            gameDiv: document.getElementById("game"),
+                            nextDiv: document.getElementById("next")
+                        };
+                        t = new Game, t.init(n), r(), e = setInterval(o, 250)
+                    };
+                this.start = s
+            },
+            Game = function () {
+                var t = [
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    ],
+                    e = void 0,
+                    r = void 0,
+                    n = [],
+                    a = [],
+                    o = function (t, e, r) {
+                        for (var n = 0; n < e.length; n++) {
+                            for (var a = [], o = 0; o < e[0].length; o++) {
+                                var i = document.createElement("div");
+                                i.className = "none", i.style.top = 20 * n + "px", i.style.left = 20 * o + "px", t.appendChild(
+                                    i), a.push(i)
+                            }
+                            r.push(a)
+                        }
+                    },
+                    i = function (t, e) {
+                        for (var r = 0; r < t.length; r++)
+                            for (var n = 0; n < t[0].length; n++) 1 === t[r][n] ? e[r][n].className = "done" : 2 === t[
+                                r][n] ? e[r][n].className = "current" : e[r][n].className = "none"
+                    },
+                    s = function (e, r, n) {
+                        return !(e.x + r < 0) && (!(e.x + r >= t.length) && (!(e.y + n < 0) && (!(e.y + n >= t[0].length) &&
+                            1 !== t[e.x + r][e.y + n])))
+                    },
+                    c = function (t, e) {
+                        for (var r = 0; r < e.length; r++)
+                            for (var n = 0; n < e[0].length; n++)
+                                if (0 !== e[r][n] && !s(t, r, n)) return !1;
+                        return !0
+                    },
+                    u = function () {
+                        for (var r = 0; r < e.data.length; r++)
+                            for (var n = 0; n < e.data[0].length; n++) s(e.origin, r, n) && (t[e.origin.x + r][e.origin
+                                .y + n
+                            ] = 0)
+                    },
+                    l = function () {
+                        for (var r = 0; r < e.data.length; r++)
+                            for (var n = 0; n < e.data[0].length; n++) s(e.origin, r, n) && (t[e.origin.x + r][e.origin
+                                .y + n
+                            ] = e.data[r][n])
+                    },
+                    f = function () {
+                        return !!e.canDown(c) && (u(), e.down(), l(), i(t, n), !0)
+                    },
+                    h = function () {
+                        e.canLeft(c) && (u(), e.left(), l(), i(t, n))
+                    },
+                    g = function () {
+                        e.canRight(c) && (u(), e.right(), l(), i(t, n))
+                    },
+                    p = function () {
+                        e.canRotate(c) && (u(), e.rotate(), l(), i(t, n))
+                    },
+                    y = function () {
+                        console.log(e.data);
+                        for (var r = 0; r < e.data.length; r++)
+                            for (var a = 0; a < e.data[0].length; a++) s(e.origin, r, a) && 2 === t[e.origin.x + r][e.origin
+                                .y + a
+                            ] && (t[e.origin.x + r][e.origin.y + a] = 1);
+                        i(t, n)
+                    },
+                    _ = function () {
+                        let f = false;
+                        for (var e = t.length - 1; e >= 0; e--) t[e].every(function (t) {
+                            return 1 === t
+                        }) && (t = [
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                        ].concat(_toConsumableArray(t.slice(0, e)), _toConsumableArray(t.slice(e + 1))))
+                        if(f) _();
+                    },
+                    v = function () {
+                        return t[0].find(function (t) {
+                            return 1 === t
+                        })
+                    },
+                    d = function (o, s) {
+                        e = r, l(), r = makeSquare(o, s), i(t, n), i(r.data, a)
+                    },
+                    b = function (s) {
+                        var c = s.gameDiv,
+                            u = s.nextDiv;
+                        e = makeSquare(2, 1), r = makeSquare(2, 3), o(c, t, n), o(u, r.data, a), l(), i(t, n), i(r.data,
+                            a)
+                    };
+                this.init = b, this.down = f, this.left = h, this.right = g, this.rotate = p, this.fall = function () {
+                    for (; f(););
+                }, this.fixed = y, this.performNext = d, this.checkClear = _, this.checkGameOver = v
+            },
+            local = new Local;
+        local.start();
+    </script>
+</body>
+
+</html>

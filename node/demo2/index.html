@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h1>echo test</h1>
+    <input type="text" id="sendTxt">
+    <button id="sendBtn">send!</button>
+    <div id="recv"></div>
+    <script>
+        var div = document.getElementById('recv');
+        var websocket = new WebSocket("ws://localhost:3000");
+
+        // websocket 建立连接的时候
+        websocket.onopen = () => {
+            console.log('websocket open');
+            div.innerHTML = 'Connected';
+        }
+
+        // websocket 关闭连接的时候
+        websocket.onclose = () => {
+            console.log('websocket close');
+            div.innerHTML = 'Closed';
+        }
+
+        // websocket 接收到消息的时候
+        websocket.onmessage = e => {
+            console.log(e);
+            div.innerHTML = e.data;
+        }
+        
+        // 发送websocket数据
+        document.getElementById('sendBtn').onclick = e => {
+            var txt = document.getElementById('sendTxt').value;
+            websocket.send(txt);
+        }
+    </script>
+</body>
+</html>

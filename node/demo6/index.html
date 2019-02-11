@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>websocket</title>
+    <script src="./public/socket.io-client.js"></script>
+</head>
+<body>
+    <h1>Chat Room</h1>
+    <input type="text" id="sendTxt">
+    <button id="sendBtn">send</button>
+    <script>
+        const socket = io("ws://localhost:3000");
+        // 展示消息
+        const showMsg = (str, type) => {
+            const div = document.createElement('div');
+            div.innerHTML = str;
+            switch(type){
+                case 'enter':{
+                    div.style.color = 'green';
+                    break;
+                }
+                case 'leave':{
+                    div.style.color = 'red';
+                    break;
+                }
+                default:{
+                    div.style.color = 'black';
+                }
+            }
+            document.body.appendChild(div);
+        }
+
+        // websocket 建立连接的时候
+        document.getElementById('sendBtn').onclick = e => {
+            const txt = document.getElementById('sendTxt').value;
+            if(txt.trim()){
+                socket.emit('message', txt);
+            }
+        }
+
+        // websocket 接收到消息的时候
+        socket.on('message', data => {
+			console.log('TCL: data', data)
+            showMsg(data);
+        })
+
+        // enter
+        socket.on('enter', (data) => {
+            showMsg(data, 'enter');
+        })
+
+        // leave
+        socket.on('leave', (data) => {
+            showMsg(data, 'leave');
+        })
+        
+    </script>
+</body>
+</html>

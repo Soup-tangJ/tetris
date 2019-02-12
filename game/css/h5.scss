@@ -118,7 +118,7 @@ body{
     @extend %clearfix;
     
     .flexwrap{
-        display:flex;
+        display:flex; 
         justify-content: space-around;
     }
     button{

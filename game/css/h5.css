@@ -84,6 +84,7 @@ body {
   box-sizing: border-box;
   width: 100%;
   padding: 0.4rem;
+  padding-top: 0;
   text-align: center;
 }
 
@@ -92,24 +93,30 @@ body {
   justify-content: space-around;
 }
 
-.control button {
+.control span {
   display: block;
   width: 50%;
   height: 1.46667rem;
   line-height: 1.46667rem;
+  border-radius: 0.10667rem;
+  background-color: #f2faff;
+  border: 1px solid rgba(0, 0, 0, 0.35);
   outline: transparent;
 }
 
-.control button.pause {
+.control span.pause {
   visibility: hidden;
 }
 
-.control button.left .iconfont, .control button.right .iconfont, .control button.down .iconfont {
+.control span.left .iconfont, .control span.right .iconfont, .control span.down .iconfont {
   font-size: 0.85333rem;
 }
 
+.control span.fall {
+  width: 100%;
+}
+
 .control .iconfont {
-  height: 1.46667rem;
-  line-height: 1.46667rem;
+  height: 1.06667rem;
   font-size: 0.69333rem;
 }

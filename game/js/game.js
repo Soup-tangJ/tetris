@@ -47,6 +47,21 @@ const Game = function(){
     let gameDivs = [];
     let nextDivs = [];
 
+    // h5 rem转换函数
+    const calculateSize = (num) => {
+        const winWidth = document.documentElement.clientWidth;
+        return  (winWidth/750 * num) * 1 + 'rem';
+    }
+
+    // 兼容pc和h5的方块定位函数
+    const fixPosition = (() => {
+        if(document.getElementById('device').value === 'h5'){
+            return calculateSize;
+        }else{
+            return (num) => (num * 20) + 'px';
+        }
+    })()
+
     // 初始化游戏区域
     const initDIv = (container, data, divs) => {
         /**
@@ -59,8 +74,8 @@ const Game = function(){
             for(let j=0; j<data[0].length; j++){
                 const node = document.createElement('div');
                 node.className = 'none';
-                node.style.top = i * 20 + 'px';
-                node.style.left = j * 20 + 'px';
+                node.style.top = fixPosition(i);
+                node.style.left = fixPosition(j);
                 container.appendChild(node);
                 div.push(node);
             }

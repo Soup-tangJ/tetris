@@ -1,0 +1,146 @@
+@function rem($size) {
+    @return ($size/75)*1rem;
+}
+
+// 一些小工具
+
+// 正方形
+@mixin square($h){
+    width:$h;
+    height:$h;
+}
+
+// 行高
+@mixin height($h){
+    height:$h;
+    line-height:$h;
+}
+
+// 背景图片
+@mixin m-bg($url){
+    background:url($url) no-repeat center;
+    background-size:100%;
+}
+
+// 黄金三连
+%text{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow:hidden;
+}
+
+// 清除浮动
+%clearfix{
+    &::after{
+        content:'';
+        display:block;
+        clear:both;
+    }
+}
+
+
+@font-face {
+    font-family: 'iconfont';
+    src: url('./font/iconfont.eot');
+    src: url('./font/iconfont.eot?#iefix') format('embedded-opentype'),
+         url('./font/iconfont.woff2') format('woff2'),
+         url('./font/iconfont.woff') format('woff'),
+         url('./font/iconfont.ttf') format('truetype'),
+         url('./font/iconfont.svg#iconfont') format('svg');
+  }
+
+.iconfont {
+    font-family: "iconfont" !important;
+    font-size: 14px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale; 
+}
+html, 
+body{
+    margin:0;
+    padding:0;
+}
+
+// 本地视图
+.local{
+    box-sizing: border-box;
+    width:100%;
+    padding: rem(30);
+    @extend %clearfix;
+    .game{
+        position: relative;
+        float:left;
+        width:rem(375);
+        height:rem(750);
+        background-color: #f2faff;
+        border: 1px solid blue;
+        border-top:none;
+       
+    }
+    .next{
+        position: relative;
+        float: left;
+        @include square(rem(160));
+        margin-left: rem(50);
+        background:#f2faff;
+        border: 1px solid blue;
+    }
+     /* 方块们 */
+     .none, .current, .done{
+        position: absolute;
+        box-sizing: border-box;
+        @include square(rem(37.5));
+    }
+    .none{
+        background-color:transparent;
+    }
+    .current{
+        background-color:pink;
+        box-shadow:inset 0 0 1px 0px red;
+    }
+    .done{
+        background-color:gray;
+        box-shadow:inset 0 0 1px 0px black;
+    }
+    .info{
+        float:left;
+        margin-left: rem(50);
+        margin-top:rem(25);
+        font-size:rem(26);
+    }
+}
+.control{
+    box-sizing: border-box;
+    width:100%;
+    padding: rem(30);
+    text-align:center;
+    @extend %clearfix;
+    
+    .flexwrap{
+        display:flex;
+        justify-content: space-around;
+    }
+    button{
+        width:50%;
+        // background-color:#f2faff;
+        // border:none;
+        // box-shadow: 0 0 0 1px rgba(0,0,0,.35);
+        // -webkit-tap-highlight-color: #abcdef;
+        outline: transparent;
+        &.pause{
+            visibility: hidden;
+        }
+        &.left,
+        &.right,
+        &.down{
+            .iconfont{
+                font-size:rem(64);
+            }
+        }
+    }
+    .iconfont{
+        @include height(rem(110));
+        font-size:rem(52);
+    }
+}

@@ -11,7 +11,7 @@ const Local = function(){
     let score = 0;
 
     // 键盘绑定事件
-    const bindKeyEvent = function(){
+    const bindKeyEvent = () => {
         document.addEventListener('keydown', (event) => {
             switch(event.keyCode){
                 case 37: // left
@@ -33,6 +33,15 @@ const Local = function(){
                     return false;
             }
         })
+    }
+
+    // h5按钮绑定事件
+    const bindBtnEvent = () => {
+        document.getElementById('up').addEventListener('click', game.rotate);
+        document.getElementById('left').addEventListener('click', game.left);
+        document.getElementById('right').addEventListener('click', game.right);
+        document.getElementById('down').addEventListener('click', game.down);
+        document.getElementById('fall').addEventListener('click', game.fall);
     }
 
     // 随机生成一个方块种类的数字
@@ -132,10 +141,7 @@ const Local = function(){
         }
         if(game.checkGameOver()){
             // 结束游戏
-            if(timer) {
-                window.cancelAnimFrame(timer);
-                timer = null;
-            }
+            window.cancelAnimFrame(timer);
             setTimeout(stop, 0);
         }else{
             game.performNext(generateType(), generateDir());
@@ -164,10 +170,14 @@ const Local = function(){
         game = new Game();
         game.init(doms, generateType(), generateDir());
         game.performNext(generateType(), generateDir());
-        bindKeyEvent();
+        if(document.getElementById('device').value === 'h5'){
+            bindBtnEvent();
+        }else{
+            bindKeyEvent();
+        }
         diySetInterval(move, INTERVAL);
     }
-    
+
     // 导出
     this.start = start;
 }

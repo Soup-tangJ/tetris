@@ -38,7 +38,7 @@ body {
   width: 5rem;
   height: 10rem;
   background-color: #f2faff;
-  border: 1px solid blue;
+  border: 1px solid #abcdef;
   border-top: none;
 }
 
@@ -49,14 +49,21 @@ body {
   height: 2.13333rem;
   margin-left: 0.66667rem;
   background: #f2faff;
-  border: 1px solid blue;
+  border: 1px solid #abcdef;
+}
+
+.local .next .none, .local .next .current, .local .next .done {
+  position: absolute;
+  box-sizing: border-box;
+  width: 25%;
+  height: 25%;
 }
 
 .local .none, .local .current, .local .done {
   position: absolute;
   box-sizing: border-box;
-  width: 0.5rem;
-  height: 0.5rem;
+  width: 10%;
+  height: 5%;
 }
 
 .local .none {
@@ -88,35 +95,60 @@ body {
   text-align: center;
 }
 
-.control .flexwrap {
-  display: flex;
-  justify-content: space-around;
+.control .wrap {
+  position: relative;
+  float: left;
+  width: 50%;
+  margin-top: 0.2rem;
 }
 
-.control span {
-  display: block;
-  width: 50%;
+.control .wrap span {
+  position: absolute;
+  width: 1.46667rem;
   height: 1.46667rem;
   line-height: 1.46667rem;
-  border-radius: 0.10667rem;
+  border-radius: 50%;
   background-color: #f2faff;
-  border: 1px solid rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(0, 0, 0, 0.25);
   outline: transparent;
 }
 
-.control span.pause {
+.control .wrap span.pause {
   visibility: hidden;
 }
 
-.control span.left .iconfont, .control span.right .iconfont, .control span.down .iconfont {
-  font-size: 0.85333rem;
+.control .wrap span.up, .control .wrap span.down {
+  top: 0.13333rem;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
 }
 
-.control span.fall {
-  width: 100%;
+.control .wrap span.left {
+  top: 1.33333rem;
+  left: 5%;
 }
 
-.control .iconfont {
-  height: 1.06667rem;
-  font-size: 0.69333rem;
+.control .wrap span.right {
+  top: 1.33333rem;
+  right: 5%;
+}
+
+.control .wrap span.down {
+  top: 2.53333rem;
+}
+
+.control .wrap span.main, .control .wrap span.main {
+  top: 2.26667rem;
+  left: 15%;
+}
+
+.control .wrap span.pre {
+  top: 0.33333rem;
+  right: 15%;
+}
+
+.control .wrap span .iconfont {
+  height: 1.46667rem;
+  line-height: 1.46667rem;
+  font-size: 0.56rem;
 }

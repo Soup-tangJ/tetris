@@ -47,35 +47,28 @@ const Game = function(){
     let gameDivs = [];
     let nextDivs = [];
 
-    // h5 rem转换函数
-    const calculateSize = (num) => {
-        const winWidth = document.documentElement.clientWidth;
-        return  (winWidth/750 * num) * 1 + 'rem';
-    }
 
     // 兼容pc和h5的方块定位函数
-    const fixPosition = (() => {
-        if(document.getElementById('device').value === 'h5'){
-            return calculateSize;
-        }else{
-            return (num) => (num * 20) + 'px';
-        }
-    })()
+    const fixPosition = (num, pre) => num * pre + '%';
 
-    // 初始化游戏区域
+    // 初始化方块格子的区域
     const initDIv = (container, data, divs) => {
         /**
          * @container dom容器（画布）
          * @data 游戏矩阵数据
          * @divs 矩阵对应的dom数组
          */
+        // 根据方块外层大容器的像素格子数计算每个小方块的位置。
+        const widthCount = 100 / data[0].length;
+        const heightCount = 100 / data.length;
+
         for(let i=0; i<data.length; i++){
             const div = [];
             for(let j=0; j<data[0].length; j++){
                 const node = document.createElement('div');
                 node.className = 'none';
-                node.style.top = fixPosition(i);
-                node.style.left = fixPosition(j);
+                node.style.top = i * heightCount + '%';
+                node.style.left = j * widthCount + '%';
                 container.appendChild(node);
                 div.push(node);
             }

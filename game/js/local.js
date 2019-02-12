@@ -2,7 +2,8 @@ const Local = function(){
     // 游戏对象
     let game;
     // 常量
-    const INTERVAL = 250;
+    const INTERVAL = document.getElementById('device').value === 'h5' ? 500 : 250;
+    const divideSecond = 1000 / INTERVAL;
     // 时间
     let timeCounter = 0;
     // 时间定时器
@@ -15,22 +16,26 @@ const Local = function(){
         document.addEventListener('keydown', (event) => {
             switch(event.keyCode){
                 case 37: // left
+                case 65:
                     game.left();
                     break;
                 case 38: // up
+                case 87:
                     game.rotate();
                     break;
                 case 39: // right
+                case 68:
                     game.right();
                     break;
                 case 40: // down
+                case 83:
                     game.down();
                     break;
                 case 32: // fall
                     game.fall();
                     break;
                 default:
-                    return false;
+                    console.log(event.keyCode);
             }
         })
     }
@@ -38,6 +43,7 @@ const Local = function(){
     // h5按钮绑定事件
     const bindBtnEvent = () => {
         document.getElementById('up').addEventListener('click', game.rotate);
+        document.getElementById('rotate').addEventListener('click', game.rotate);
         document.getElementById('left').addEventListener('click', game.left);
         document.getElementById('right').addEventListener('click', game.right);
         document.getElementById('down').addEventListener('click', game.down);
@@ -116,7 +122,7 @@ const Local = function(){
     // 界面时间更新函数
     const timeClock = () => {
         timeCounter ++;
-        if(timeCounter === 4){
+        if(timeCounter === divideSecond){
             timeCounter = 0;
             time ++;
             game.setTime(time);
@@ -175,7 +181,7 @@ const Local = function(){
         }else{
             bindKeyEvent();
         }
-        diySetInterval(move, INTERVAL);
+        // diySetInterval(move, INTERVAL);
     }
 
     // 导出

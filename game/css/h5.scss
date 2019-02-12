@@ -74,7 +74,7 @@ body{
         width:rem(375);
         height:rem(750);
         background-color: #f2faff;
-        border: 1px solid blue;
+        border: 1px solid #abcdef;
         border-top:none;
        
     }
@@ -84,13 +84,19 @@ body{
         @include square(rem(160));
         margin-left: rem(50);
         background:#f2faff;
-        border: 1px solid blue;
+        border: 1px solid #abcdef;
+        .none, .current, .done{
+            position: absolute;
+            box-sizing: border-box;
+            @include square(25%);
+        }
     }
      /* 方块们 */
      .none, .current, .done{
         position: absolute;
         box-sizing: border-box;
-        @include square(rem(37.5));
+        width:10%;
+        height:5%;
     }
     .none{
         background-color:transparent;
@@ -117,39 +123,75 @@ body{
     padding-top:0;
     text-align:center;
     @extend %clearfix;
-    
-    .flexwrap{
-        display:flex; 
-        justify-content: space-around;
-    }
-    span{
-        display:block;
-        width:50%;
-        @include height(rem(110));
-        border-radius: rem(8);
-        background-color:#f2faff;
-        border:1px solid rgba(0,0,0,.35);
-        // background-color:#f2faff;
-        // border:none;
-        // box-shadow: 0 0 0 1px rgba(0,0,0,.35);
-        // -webkit-tap-highlight-color: #abcdef;
-        outline: transparent;
-        &.pause{
-            visibility: hidden;
-        }
-        &.left,
-        &.right,
-        &.down{
+    .wrap{
+        position: relative;
+        float: left;
+        width: 50%;
+        margin-top:rem(15);
+        span{
+            position: absolute;
+            width:rem(110);
+            @include height(rem(110));
+            border-radius: 50%;
+            background-color:#f2faff;
+            border:1px solid rgba(0,0,0,.25);
+            outline: transparent;
+            
+            &.pause{
+                visibility: hidden;
+            }
+            // &.up,
+            // &.down,
+            // &.left,
+            // &.right{
+            //     background:url(../img/main.png) no-repeat center;
+            //     background-size:100% 100%;
+            // }
+            &.up,
+            &.down{
+                top:rem(10);
+                left:50%;
+                transform: translate3d(-50%, 0, 0);
+            }
+            &.left{
+                top:rem(100);
+                left:5%;
+            }
+            &.right{
+                top:rem(100);
+                right:5%;
+            }
+            &.down{
+                top:rem(190);
+            }
+            &.main,
+            // &.pre{
+            //     background: url(../img/pre.png) no-repeat center;
+            //     background-size:100%
+            // }
+            &.main{
+                top:rem(170);
+                left:15%;
+            }
+            &.pre{
+                top:rem(25);
+                right:15%;
+            }
+            // &.left,
+            // &.right,
+            // &.down{
+            //     .iconfont{
+            //         font-size:rem(64);
+            //     }
+            // }
+            // &.fall{
+            //     width:100%;
+            // }
             .iconfont{
-                font-size:rem(64);
+                @include height(rem(110));
+                font-size:rem(42);
             }
         }
-        &.fall{
-            width:100%;
-        }
-    }
-    .iconfont{
-        height:rem(80);
-        font-size:rem(52);
+        
     }
 }

@@ -3,8 +3,6 @@ const Local = function(){
     let game;
     // 常量
     const INTERVAL = 250;
-    // 定时器
-    let timer = null;
     // 时间
     let timeCounter = 0;
     // 时间定时器
@@ -66,8 +64,48 @@ const Local = function(){
         }
     }
 
-    // 计时函数
-    const timeFunc = () => {
+    // requestAnimationFrame 的兼容性操作
+    (() => {
+        window.requestAnimFrame =   
+            window.requestAnimationFrame        || 
+            window.webkitRequestAnimationFrame  || 
+            window.mozRequestAnimationFrame     || 
+            window.oRequestAnimationFrame       || 
+            window.msRequestAnimationFrame      || 
+            function(callback){
+                window.setTimeout(callback, 1000 / 60);
+            };
+
+        window.cancelAnimFrame  =  
+            window.cancelAnimationFrame         ||
+            window.webkitCancelAnimationFrame   ||
+            window.mozCancelAnimationFrame      ||
+            window.oCancelAnimationFrame        ||
+            window.msCancelAnimationFrame       ||
+            function (timeId) {
+                window.clearInterval(timeId);
+            }
+    })()
+
+    // 精确计时器函数
+    const diySetInterval = (callback, interval) => {
+        let timer;
+        const { now } = Date;
+        let startTime = now();
+        let endTime = startTime;
+        const loop = () => {
+          timer = window.requestAnimFrame(loop);
+          endTime = now();
+          if (endTime - startTime >= interval) {
+            startTime = endTime = now();
+            callback(timer);
+          }
+        }
+        timer = window.requestAnimFrame(loop);
+    }
+
+    // 界面时间更新函数
+    const timeClock = () => {
         timeCounter ++;
         if(timeCounter === 4){
             timeCounter = 0;
@@ -80,36 +118,35 @@ const Local = function(){
     }
     
     // 游戏进行逻辑
-    const move = () => {
-        timeFunc();
-        if(!game.down()){
-            let lines = 0;
-            game.fixed();
-            while(game.checkClear()){
-                ++lines;
+    const move = (timer) => {
+        timeClock();
+        if(game.down()) return;
+
+        let lines = 0;
+        game.fixed();
+        while(game.checkClear()){
+            ++lines;
+        }
+        if(lines > 0){
+            score = game.addScore(lines, score);
+        }
+        if(game.checkGameOver()){
+            // 结束游戏
+            if(timer) {
+                window.cancelAnimFrame(timer);
+                timer = null;
             }
-            if(lines > 0){
-                score = game.addScore(lines, score);
-            }
-            const isGameOver = game.checkGameOver();
-            if(isGameOver){
-                // 结束游戏
-                stop(); 
-            }else{
-                game.performNext(generateType(), generateDir());
-            }
+            setTimeout(stop, 0);
+        }else{
+            game.performNext(generateType(), generateDir());
         }
     }
 
     // 游戏结束
     const stop = () => {
-        if(timer) {
-            clearInterval(timer);
-            timer = null;
-        }
         alert('Game Over');
         if(confirm('还想玩？')){
-            location.reload();
+            history.go(0);
         }else{
             alert('那好吧，88');
             window.close();
@@ -128,8 +165,9 @@ const Local = function(){
         game.init(doms, generateType(), generateDir());
         game.performNext(generateType(), generateDir());
         bindKeyEvent();
-        timer = setInterval(move, INTERVAL);
+        diySetInterval(move, INTERVAL);
     }
+    
     // 导出
     this.start = start;
 }

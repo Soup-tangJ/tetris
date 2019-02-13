@@ -47,10 +47,6 @@ const Game = function(){
     let gameDivs = [];
     let nextDivs = [];
 
-
-    // 兼容pc和h5的方块定位函数
-    const fixPosition = (num, pre) => num * pre + '%';
-
     // 初始化方块格子的区域
     const initDIv = (container, data, divs) => {
         /**
@@ -198,6 +194,10 @@ const Game = function(){
         }
         refreshDiv(gameData, gameDivs);
     }
+    // 方块快速下坠
+    const fall = () => {
+        while(down());
+    }
 
     // 消行
     const checkClear = () => {
@@ -296,9 +296,7 @@ const Game = function(){
     this.left = left;
     this.right = right;
     this.rotate = rotate;
-    this.fall = function(){
-        while(down());
-    };
+    this.fall = fall;
     this.fixed = fixed;
     this.performNext = performNext;
     this.checkClear = checkClear;

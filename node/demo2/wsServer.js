@@ -1,3 +1,4 @@
+// 使用nodejs-websocket库创建websocket服务
 const ws = require('nodejs-websocket');
 
 const POST = 3000;

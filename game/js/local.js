@@ -1,4 +1,4 @@
-const Local = function(){
+const Local = function(socket){
     // 游戏对象
     let game;
     // 常量
@@ -173,16 +173,24 @@ const Local = function(){
             scoreDiv: document.getElementById('local_score')
         }
         game = new Game();
-        game.init(doms, generateType(), generateDir());
+        const type = generateType();
+        const dir = generateDir();
+        game.init(doms, type, dir);
+        socket.emit('init', {type, dir});
         game.performNext(generateType(), generateDir());
         if(document.getElementById('device').value === 'h5'){
             bindBtnEvent();
         }else{
             bindKeyEvent();
         }
-        diySetInterval(move, INTERVAL);
+        // diySetInterval(move, INTERVAL);
     }
 
-    // 导出
-    this.start = start;
+    // // 导出
+    // this.start = start;
+    // 开始
+    socket.on('start', () => {
+        document.getElementById('waiting').innerHTML = '';
+        start();
+    })
 }

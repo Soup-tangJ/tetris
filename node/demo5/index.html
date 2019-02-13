@@ -20,6 +20,7 @@
       <input id="m" autocomplete="off" /><button>Send</button>
     </form>
     <script>
+        // 使用socket.io 模仿echo.socket.org
         const socket = io('ws://localhost:3000');
         const form = document.getElementById('form');
         const input = document.getElementById('m');

@@ -126,7 +126,7 @@ const Local = function(){
             timeCounter = 0;
             time ++;
             game.setTime(time);
-            if(time % 15 === 0){
+            if(time % 30 === 0){
                 game.intruder(generateBottomLines(1));
             }
         }

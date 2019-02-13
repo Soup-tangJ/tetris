@@ -28,7 +28,7 @@ body {
 .local {
   box-sizing: border-box;
   width: 100%;
-  padding: 0.4rem;
+  padding: 0.13333rem 0.4rem;
   /* 方块们 */
 }
 
@@ -90,7 +90,7 @@ body {
 .control {
   box-sizing: border-box;
   width: 100%;
-  padding: 0.4rem;
+  padding: 0.13333rem;
   padding-top: 0;
   text-align: center;
 }
@@ -99,18 +99,20 @@ body {
   position: relative;
   float: left;
   width: 50%;
-  margin-top: 0.2rem;
+  height: 4.66667rem;
+  margin-top: 0.01333rem;
 }
 
 .control .wrap span {
   position: absolute;
-  width: 1.46667rem;
-  height: 1.46667rem;
-  line-height: 1.46667rem;
+  width: 1.8rem;
+  height: 1.8rem;
+  line-height: 1.8rem;
   border-radius: 50%;
   background-color: #f2faff;
   border: 1px solid rgba(0, 0, 0, 0.25);
   outline: transparent;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.65);
 }
 
 .control .wrap span.pause {
@@ -118,37 +120,54 @@ body {
 }
 
 .control .wrap span.up, .control .wrap span.down {
-  top: 0.13333rem;
-  left: 50%;
+  top: 0.06667rem;
+  left: 55%;
   transform: translate3d(-50%, 0, 0);
 }
 
 .control .wrap span.left {
-  top: 1.33333rem;
-  left: 5%;
+  top: 1.53333rem;
+  left: 2%;
 }
 
 .control .wrap span.right {
-  top: 1.33333rem;
-  right: 5%;
+  top: 1.49333rem;
+  right: -7%;
 }
 
 .control .wrap span.down {
-  top: 2.53333rem;
+  top: 3rem;
 }
 
 .control .wrap span.main, .control .wrap span.main {
-  top: 2.26667rem;
+  top: 2.86667rem;
   left: 15%;
+  width: 2.8rem;
+  height: 1.73333rem;
+  border-radius: 1.33333rem/1rem;
+}
+
+.control .wrap span.main .iconfont, .control .wrap span.main .iconfont {
+  height: 1.73333rem;
+  line-height: 1.73333rem;
 }
 
 .control .wrap span.pre {
-  top: 0.33333rem;
-  right: 15%;
+  top: 0.53333rem;
+  right: 8%;
+  width: 2.66667rem;
+  height: 1.46667rem;
+  border-radius: 10%/0.93333rem 10%;
+}
+
+.control .wrap span.pre .iconfont {
+  height: 1.46667rem;
+  line-height: 1.46667rem;
 }
 
 .control .wrap span .iconfont {
-  height: 1.46667rem;
-  line-height: 1.46667rem;
-  font-size: 0.56rem;
+  height: 1.8rem;
+  line-height: 1.8rem;
+  font-size: 0.69333rem;
+  color: rgba(0, 0, 0, 0.65);
 }

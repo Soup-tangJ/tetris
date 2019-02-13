@@ -181,7 +181,7 @@ const Local = function(){
         }else{
             bindKeyEvent();
         }
-        // diySetInterval(move, INTERVAL);
+        diySetInterval(move, INTERVAL);
     }
 
     // 导出

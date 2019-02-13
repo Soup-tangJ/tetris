@@ -66,7 +66,8 @@ body{
 .local{
     box-sizing: border-box;
     width:100%;
-    padding: rem(30);
+    padding: rem(10) rem(30);
+    
     @extend %clearfix;
     .game{
         position: relative;
@@ -119,7 +120,7 @@ body{
 .control{
     box-sizing: border-box;
     width:100%;
-    padding: rem(30);
+    padding: rem(10);
     padding-top:0;
     text-align:center;
     @extend %clearfix;
@@ -127,16 +128,17 @@ body{
         position: relative;
         float: left;
         width: 50%;
-        margin-top:rem(15);
+        height: rem(350);
+        margin-top:rem(1);
         span{
             position: absolute;
-            width:rem(110);
-            @include height(rem(110));
+            width:rem(135);
+            @include height(rem(135));
             border-radius: 50%;
             background-color:#f2faff;
             border:1px solid rgba(0,0,0,.25);
             outline: transparent;
-            
+            -webkit-tap-highlight-color: rgba(0,0,0,.65);
             &.pause{
                 visibility: hidden;
             }
@@ -149,20 +151,20 @@ body{
             // }
             &.up,
             &.down{
-                top:rem(10);
-                left:50%;
+                top:rem(5);
+                left:55%;
                 transform: translate3d(-50%, 0, 0);
             }
             &.left{
-                top:rem(100);
-                left:5%;
+                top:rem(115);
+                left:2%;
             }
             &.right{
-                top:rem(100);
-                right:5%;
+                top:rem(112);
+                right:-7%;
             }
             &.down{
-                top:rem(190);
+                top:rem(225);
             }
             &.main,
             // &.pre{
@@ -170,12 +172,24 @@ body{
             //     background-size:100%
             // }
             &.main{
-                top:rem(170);
+                top:rem(215);
                 left:15%;
+                width:rem(210);
+                height:rem(130);
+                border-radius: #{rem(100)}/#{rem(75)};
+                .iconfont{
+                    @include height(rem(130));
+                }
             }
             &.pre{
-                top:rem(25);
-                right:15%;
+                top:rem(40);
+                right:8%;
+                width:rem(200);
+                height:rem(110);
+                border-radius: 10%/#{rem(70)} 10%;
+                .iconfont{
+                    @include height(rem(110));
+                }
             }
             // &.left,
             // &.right,
@@ -188,9 +202,10 @@ body{
             //     width:100%;
             // }
             .iconfont{
-                @include height(rem(110));
-                font-size:rem(42);
-            }
+                @include height(rem(135));
+                font-size:rem(52);
+                color:rgba(0,0,0,.65);
+            }   
         }
         
     }

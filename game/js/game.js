@@ -234,6 +234,7 @@ const Game = function(){
     
     // 干扰功能
     const intruder = (lines) => {
+        if(!lines) return;
         const linesCount = lines.length;
         gameData = [
             ...gameData.slice(linesCount),
@@ -243,7 +244,7 @@ const Game = function(){
         if(cur.origin.x < 0){
             cur.origin.x = 0;
         }
-        refreshDiv(gameData, gameDivs);
+        // refreshDiv(gameData, gameDivs);
     }
     
     // 初始化

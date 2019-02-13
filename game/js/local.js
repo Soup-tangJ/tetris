@@ -68,15 +68,14 @@ const Local = function(){
     // 生成随机方块行
     const getRandomLine = () => {
         const { GAME_GRID_WIDTH } = game;
-        const wrap = [];
-        for(let i=0; i<GAME_GRID_WIDTH; i++){
-            wrap.push(Math.ceil(Math.random() * 2) - 1);
+        const wrap = Array.from(new Array(GAME_GRID_WIDTH), () => 1);
+        const whiteCount = Math.ceil(Math.random() * 3);
+
+        for(let i=0; i<whiteCount; i++){
+            wrap[Math.ceil(Math.random() * 10) - 1] = 0;
         }
-        if(wrap.every(item => item === 1)){ // 如果全是1，就重新生成
-            return arguments.callee();
-        }else{
-            return wrap;
-        }
+        
+        return wrap;
     }
 
     // requestAnimationFrame 的兼容性操作

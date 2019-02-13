@@ -1,4 +1,4 @@
-const Local = function(){
+const Local = function(socket){
     // 游戏对象
     let game;
     // 常量
@@ -10,29 +10,37 @@ const Local = function(){
     let time = 0;
     // 分数
     let score = 0;
-
+    // 定时器
+    let timer = null;
     // 键盘绑定事件
     const bindKeyEvent = () => {
         document.addEventListener('keydown', (event) => {
+            if(game.isStop) return; // 如果是暂停状态，则不可进行操作
+
             switch(event.keyCode){
                 case 37: // left
                 case 65:
                     game.left();
+                    socket.emit('left');
                     break;
                 case 38: // up
                 case 87:
                     game.rotate();
+                    socket.emit('rotate');
                     break;
                 case 39: // right
                 case 68:
                     game.right();
+                    socket.emit('right');
                     break;
                 case 40: // down
                 case 83:
                     game.down();
+                    socket.emit('down');
                     break;
                 case 32: // fall
                     game.fall();
+                    socket.emit('fall');
                     break;
                 default:
                     console.log(event.keyCode);
@@ -103,7 +111,6 @@ const Local = function(){
 
     // 精确计时器函数
     const diySetInterval = (callback, interval) => {
-        let timer;
         const { now } = Date;
         let startTime = now();
         let endTime = startTime;
@@ -125,43 +132,55 @@ const Local = function(){
             timeCounter = 0;
             time ++;
             game.setTime(time);
+            socket.emit('time', time);
             if(time % 30 === 0){
-                game.intruder(generateBottomLines(1));
+                const intruderLine = generateBottomLines(1);
+                game.intruder(intruderLine);
+                socket.emit('intruder', intruderLine);
             }
         }
     }
     
     // 游戏进行逻辑
-    const move = (timer) => {
+    const move = () => {
         timeClock();
-        if(game.down()) return;
+        if(game.down()){
+            socket.emit('down');
+            return;
+        }
 
         let lines = 0;
         game.fixed();
+        socket.emit('fixed');
         while(game.checkClear()){
             ++lines;
         }
-        if(lines > 0){
+        if(lines){
             score = game.addScore(lines, score);
+            socket.emit('score', lines);
+            if(lines > 2){ // 如果消行大于两行，给对方增加lines - 2 行
+                const bottomLines = generateBottomLines(lines - 2);
+                socket.emit('bottomLine', bottomLines);
+            }
         }
         if(game.checkGameOver()){
             // 结束游戏
-            window.cancelAnimFrame(timer);
-            setTimeout(stop, 0);
+            stop();
+            document.getElementById('waiting').innerHTML = '等待对方游戏结果...';
+            // 发送成绩给服务器判断胜负
+            socket.emit('over', score);
         }else{
-            game.performNext(generateType(), generateDir());
+            const type = generateType();
+            const dir = generateDir();
+            game.performNext(type, dir);
+            socket.emit('next', {type, dir});
         }
     }
 
     // 游戏结束
     const stop = () => {
-        alert('Game Over');
-        if(confirm('还想玩？')){
-            history.go(0);
-        }else{
-            alert('那好吧，88');
-            window.close();
-        }
+        window.cancelAnimFrame(timer);
+        game.isStop = true;
     }
     
     // 开始
@@ -173,8 +192,14 @@ const Local = function(){
             scoreDiv: document.getElementById('local_score')
         }
         game = new Game();
-        game.init(doms, generateType(), generateDir());
-        game.performNext(generateType(), generateDir());
+        const type = generateType();
+        const dir = generateDir();
+        game.init(doms, type, dir);
+        socket.emit('init', {type, dir});
+        const nextType = generateType();
+        const nextDir = generateDir();
+        game.performNext(nextType, nextDir);
+        socket.emit('next', {type: nextType, dir: nextDir});
         if(document.getElementById('device').value === 'h5'){
             bindBtnEvent();
         }else{
@@ -183,6 +208,21 @@ const Local = function(){
         diySetInterval(move, INTERVAL);
     }
 
-    // 导出
-    this.start = start;
+    // 开始
+    socket
+        .on('start', () => {
+            document.getElementById('waiting').innerHTML = '';
+            start();
+        })
+        .on('over', (isWin) => {
+            game.gameover(isWin);
+        })
+        .on('leave', () => {
+            document.getElementById('waiting').innerHTML = '对方已离开游戏…';
+            stop();
+        })
+        .on('bottomLine', (bottomLines) => {
+            game.intruder(bottomLines);
+            socket.emit('intruder', bottomLines);
+        })
 }

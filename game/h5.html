@@ -15,7 +15,7 @@
         <div class="game" id="local_game"></div>
         <div class="next" id="local_next"></div>
         <div class="info">
-            <div>已用时：<span id="local_time">0</span> s</div>
+            <div>已用时：<span id="local_time">0</span> 秒</div>
             <div>已得分：<span id="local_score">0</span> 分</div>
         </div>
     </div>
@@ -32,11 +32,11 @@
             <span class="main" id="fall"><i class="iconfont">&#xe63b;</i></span>
         </div>
     </div>
-    <script src="./js/remote.js"></script>
-    <script src="./js/square.js"></script>
     <script src="./js/squareFactory.js"></script>
-    <script src="./js/local.js"></script>
     <script src="./js/game.js"></script>
-    <script src="./js/script.js"></script>
+    <script src="./js/single.js"></script>
+    <script>
+        new Single().start();
+    </script>
 </body>
 </html>

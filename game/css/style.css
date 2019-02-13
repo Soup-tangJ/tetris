@@ -4,7 +4,7 @@
     width:200px;
     height:400px;
     background-color: #f2faff;
-    border: 1px solid blue;
+    border: 1px solid #abcdef;
     border-top:none;
 }
 .next{
@@ -14,7 +14,7 @@
     position:absolute;
     top:10px;
     left:250px;
-    border: 1px solid blue;
+    border: 1px solid #abcdef;
 }
 .info{
     position:absolute;

@@ -12,6 +12,7 @@
     <button id="sendBtn">send!</button>
     <div id="recv"></div>
     <script>
+        // 使用浏览器原生提供的socket api
         var div = document.getElementById('recv');
         var websocket = new WebSocket("ws://echo.websocket.org/");
 

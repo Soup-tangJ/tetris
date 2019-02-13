@@ -4,7 +4,6 @@ const Game = function(){
     let nextDiv;
     let timeDiv;
     let scoreDiv;
-
     // 游戏矩阵
     // 预览方块的数据
     let nextData = [
@@ -43,13 +42,12 @@ const Game = function(){
     // 下一个方块
     let next;
     
+    //是否暂停
+    let isStop = false;
+
     // divs
     let gameDivs = [];
     let nextDivs = [];
-
-
-    // 兼容pc和h5的方块定位函数
-    const fixPosition = (num, pre) => num * pre + '%';
 
     // 初始化方块格子的区域
     const initDIv = (container, data, divs) => {
@@ -198,6 +196,11 @@ const Game = function(){
         }
         refreshDiv(gameData, gameDivs);
     }
+    // 方块快速下坠
+    const fall = () => {
+        while(down());
+        // fixed();
+    }
 
     // 消行
     const checkClear = () => {
@@ -288,17 +291,25 @@ const Game = function(){
         return score;
     }
 
+    // 比赛结果
+    const gameover = (isWin) => {
+        if(isWin){
+            document.getElementById('waiting').innerHTML = '你赢啦！';
+        }else{
+            document.getElementById('waiting').innerHTML = '你输了…';
+        }
+    }
+
     // 导出
     this.GAME_GRID_WIDTH = gameData[0].length;
     this.GAME_GRID_HEIGHT = gameData.length;
+    this.isStop = isStop;
     this.init = init;
     this.down = down;
     this.left = left;
     this.right = right;
     this.rotate = rotate;
-    this.fall = function(){
-        while(down());
-    };
+    this.fall = fall;
     this.fixed = fixed;
     this.performNext = performNext;
     this.checkClear = checkClear;
@@ -306,4 +317,5 @@ const Game = function(){
     this.setTime = setTime;
     this.addScore = addScore;
     this.intruder = intruder;
+    this.gameover = gameover;
 }

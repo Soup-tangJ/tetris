@@ -180,7 +180,11 @@ const Local = function(socket){
     // 游戏结束
     const stop = () => {
         window.cancelAnimFrame(timer);
-        game.isStop = true;
+        try{
+            game.isStop = true;
+        }catch(e){
+            return;
+        }
     }
     
     // 开始

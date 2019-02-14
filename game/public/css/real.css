@@ -99,8 +99,14 @@ body {
   margin-top: 20px;
 }
 
-.screen .chat .wrap {
+.screen .chat .chat_wrap {
   height: 220px;
+  padding: 10px 0;
+  overflow: auto;
+}
+
+.screen .chat .chat_wrap ::-webkit-scrollbar {
+  display: none;
 }
 
 .screen .chat ul {
@@ -134,8 +140,9 @@ body {
 }
 
 .screen .chat input {
+  box-sizing: border-box;
   padding: 10px;
-  width: 98%;
+  width: 100%;
   border: 1px solid #abcdef;
   outline: none;
 }

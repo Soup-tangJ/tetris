@@ -23,7 +23,7 @@ const Remote = function(socket){
                 for(let i=0; i<lineNum; i++){
                     game.checkClear();
                 }
-                game.addScore(lineNum, score);
+                score = game.addScore(lineNum, score);
             })
             .on('time', (time) => {
                 game.setTime(time);

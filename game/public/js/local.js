@@ -16,7 +16,7 @@ const Local = function(socket){
     const bindKeyEvent = () => {
         document.addEventListener('keydown', (event) => {
             if(game.isStop) return; // 如果是暂停状态，则不可进行操作
-
+            event.preventDefault();
             switch(event.keyCode){
                 case 37: // left
                 case 65:
@@ -220,10 +220,6 @@ const Local = function(socket){
         })
         .on('over', (isWin) => {
             game.gameover(isWin);
-        })
-        .on('leave', () => {
-            document.getElementById('waiting').innerHTML = '对方已离开游戏…';
-            stop();
         })
         .on('bottomLine', (bottomLines) => {
             game.intruder(bottomLines);

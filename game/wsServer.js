@@ -1,7 +1,7 @@
 const app = require('http').createServer();
 const io = require('socket.io')(app);
 
-const PORT = 3000;
+const PORT = 8081;
 
 // 客户端连接数
 let clientCount = 0;

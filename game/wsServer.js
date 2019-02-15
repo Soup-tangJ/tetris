@@ -38,7 +38,7 @@ const judgeGame = (pre, next) => { // 玩家按死亡先后顺序传入
 
 // 当前房间广播
 const broadcast = (socket, event, data) => {
-    const anoterSocket = getOtherSocket(socket); event,
+    const anoterSocket = getOtherSocket(socket);
     socket.emit(event, data);
     anoterSocket && anoterSocket.emit(event, data);
 }
@@ -96,6 +96,7 @@ io.on('connection', (socket) => { // 客户端连接
         socket.emit('waiting', '准备就绪');
         const anoterSocket = getOtherSocket(socket);
 
+        anoterSocket.emit('chat', {type: 'public', msg: '对方已准备就绪！'});
         if(anoterSocket.prepared && socket.prepared){
             broadcast(socket, 'chat', {type: 'public', msg: '双方准备就绪，游戏将在3秒后开始...'});
             setTimeout(() => {

@@ -7,6 +7,13 @@ class Square {
             [0, 0, 0, 0],
             [0, 0, 0, 0],
         ];
+        // 原点
+        this.origin = {
+            x: 0,
+            y: 0
+        };
+        // 方向
+        this.dir = 0;
     }
     canRotate(isValid) {
         let dir = (this.dir + 1) % 4;

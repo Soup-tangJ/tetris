@@ -27,8 +27,6 @@ const makeChatMsg = ({type, msg, identity}) => {
 socket.on('waiting', (msg) => { // waiting消息
         document.querySelector('#waiting').innerHTML = msg;
     }).on('chat', (data) => {
-        console.log('TCL: data', data)
-
         makeChatMsg(data);
     }).on('ready', () => {
         document.querySelector('#ready').style.display = 'block';
